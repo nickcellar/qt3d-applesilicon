@@ -59,13 +59,13 @@ namespace EXPRESS = STEP::EXPRESS;
 
 // trim from start
 static inline std::string &ltrim(std::string &s) {
-	s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1( std::ptr_fun(Assimp::IsSpace<char>))));
+	s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1( std::function(Assimp::IsSpace<char>))));
 	return s;
 }
 
 // trim from end
 static inline std::string &rtrim(std::string &s) {
-	s.erase(std::find_if(s.rbegin(), s.rend(), std::not1( std::ptr_fun(Assimp::IsSpace<char>))).base(),s.end());
+	s.erase(std::find_if(s.rbegin(), s.rend(), std::not1( std::function(Assimp::IsSpace<char>))).base(),s.end());
 	return s;
 }
 // trim from both ends
@@ -109,7 +109,7 @@ STEP::TypeError::TypeError (const std::string& s,uint64_t entity /* = ENTITY_NOT
 STEP::DB* STEP::ReadFileHeader(boost::shared_ptr<IOStream> stream)
 {
 	boost::shared_ptr<StreamReaderLE> reader = boost::shared_ptr<StreamReaderLE>(new StreamReaderLE(stream));
-	std::auto_ptr<STEP::DB> db = std::auto_ptr<STEP::DB>(new STEP::DB(reader));
+	std::unique_ptr<STEP::DB> db = std::unique_ptr<STEP::DB>(new STEP::DB(reader));
 
 	LineSplitter& splitter = db->GetSplitter();
 	if (!splitter || *splitter != "ISO-10303-21;") {
